@@ -1,3 +1,4 @@
+pub mod utils;
 pub mod game;
 
 #[cfg(test)]

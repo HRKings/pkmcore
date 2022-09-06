@@ -1,3 +1,4 @@
+pub mod pkm;
 pub mod species;
 pub mod utils;
 pub mod game;

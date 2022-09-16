@@ -8,7 +8,7 @@
     - [2.3 - Why Rust?](#23---why-rust)
 <!--TOC-->
 
-This repository is a complete core library to read, write and manipulate Pokemon data. It's meant to be a low level library that can be used in any applications, embedded systems, cross-platform and in a lightweight manner.
+This repository is a complete core library to read, write and manipulate Pokemon data and save files, as well provide some tools for researching and data restoration. It's meant to be a low level library that can be used in any applications, embedded systems, cross-platform and in a lightweight manner.
 
 # 1 - Compatibility with PKHex.Core
 This library aims provides full compatibility with [PKHex Core](https://github.com/kwsch/PKHeX), its file formats and provide all of its features up to commit [038722ee0](https://github.com/kwsch/PKHeX/tree/038722ee09fa1139b6492056e9ca359d2712f4d2)
@@ -19,7 +19,7 @@ Currently PKHex is written in C# (one of my favorite languages). While .NET Core
 
 My main OS is Linux what made me frustrated when I tried to use the app with Mono/Wine. I also wanted to make new apps that use the PKHex.Core, but I didn't want to make them in C# because of portability.
 
-On top of that I wanted to expand and build upon the core, without interfering with the philosophy of the PKHex team
+On top of that I wanted to expand and build upon the core without interfering with the philosophy of the PKHex team.
 
 All of that made me start creating this library.
 

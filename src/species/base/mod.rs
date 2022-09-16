@@ -103,9 +103,9 @@ impl SpeciesInfo {
             SpeciesGenderCategory::MaleOnly => PokemonGender::Male,
             SpeciesGenderCategory::FemaleOnly => PokemonGender::Female,
             _ => {
-                // `gender_ratio` is the probability out of 254 of a Pokemon being female
+                // `gender_ratio` is the probability out of 254 (MAGIC_RATIO_FEMALE) of a Pokemon being female
                 // this generate a random gender accordingly
-                if rand::thread_rng().gen_ratio(self.gender_ratio.into(), 254) {
+                if rand::thread_rng().gen_ratio(self.gender_ratio.into(), MAGIC_RATIO_FEMALE.into()) {
                     PokemonGender::Female
                 } else {
                     PokemonGender::Male

@@ -23,6 +23,8 @@ pub enum GameVersion {
     Platinum = 12,
     HeartGold = 7,
     SoulSilver = 8,
+
+    Generation4Unused = 9,
     // endregion
 
     // region: Generation 5
@@ -93,9 +95,11 @@ pub enum GameVersion {
 
     // region: Grouping
     GroupRedBlueGreen,
+    /// Obs.: Fixed value identifier from Generation 1 Games
     GroupRedBlueYellow,
 
     GroupGoldSilver,
+    /// Obs.: Fixed value identifier from Generation 2 Games
     GroupGoldSilverCrystal,
 
     GroupRubySapphire,

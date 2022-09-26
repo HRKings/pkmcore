@@ -5,6 +5,7 @@ use crate::{
     utils::constants::{MAGIC_RATIO_FEMALE, MAGIC_RATIO_GENDERLESS, MAGIC_RATIO_MALE},
 };
 
+#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct SpeciesInfo {
     data: Vec<u8>,
@@ -42,7 +43,7 @@ pub struct SpeciesInfo {
     base_friendship: u8,
 
     base_exp: u16,
-    exp_growth: u8,
+    pub exp_growth: u8,
 
     valid_abilities: u8,
 
@@ -63,11 +64,12 @@ pub struct SpeciesInfo {
     special_type_tutors: Vec<bool>,
 }
 
+#[derive(PartialEq)]
 pub enum SpeciesGenderCategory {
-    Genderless,
-    MaleOnly,
-    FemaleOnly,
-    DualGender,
+    Genderless = 2,
+    FemaleOnly = 1,
+    MaleOnly = 0,
+    DualGender = -1,
 }
 
 impl SpeciesInfo {
@@ -113,4 +115,8 @@ impl SpeciesInfo {
             }
         }
     }
+}
+
+trait SpeciesTrait {
+    fn ability_index(ability_id: u16) -> u16;
 }

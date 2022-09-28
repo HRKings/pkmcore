@@ -1,11 +1,11 @@
 use std::cmp::max;
 
-use crate::{species::base::{SpeciesInfo, SpeciesGenderCategory}, game::enums::{pokemon_gender::PokemonGender, game_version::GameVersion, pokemon_nature::PokemonNature, language_id::LanguageID, species_id::SpeciesID, location}};
+use crate::{species::base::{SpeciesInfo, SpeciesGenderCategory}, game::enums::{pokemon_gender::PokemonGender, game_version::GameVersion, pokemon_nature::PokemonNature, language_id::LanguageID, species_id::SpeciesID, location}, trainer::TrainerInfo};
 
 use super::utils::{experience::{get_level, get_minimum_level_experience}, gender::generate_from_pid_and_ratio};
 
 #[allow(dead_code)]
-#[derive(Debug, Clone)]
+
 pub struct PokemonBase {
     // PKMCore/PKHex Specific
 	valid_extensions: Vec<String>,
@@ -18,8 +18,10 @@ pub struct PokemonBase {
 
     // Technical
 	nickname_bytes: Vec<u8>,
-	ot_bytes: Vec<u8>,
-	ht_bytes: Vec<u8>,
+	/// Original Trainer
+    ot_bytes: Vec<u8>,
+	/// Handler (Current Trainer)
+    ht_bytes: Vec<u8>,
 
 	size_on_party: u16,
 	size_when_stored: u16,
@@ -40,9 +42,9 @@ pub struct PokemonBase {
 
     current_friendship: u8,
 
-    trainer_public_id: u16,
-    ot_name: String,
-    ot_gender: u8,
+    /// Original Trainer
+    ot_info: TrainerInfo,
+    ot_friendship: u8,
 
     ball_type: u8,
     met_level: u8,
@@ -89,7 +91,6 @@ pub struct PokemonBase {
 
     // Hidden
     version: GameVersion,
-    trainer_secret_id: u16,
 
     pokerus_strain: u16,
     pokerus_days: u16,
@@ -112,17 +113,12 @@ pub struct PokemonBase {
     met_location: u16,
     egg_location: u16,
 
-    ot_friendship: u8,
-
     met_year: u8,
     met_month: u8,
     met_day: u8,
 
     /// Handler (Current Trainer) Name
-    ht_name: String,
-    /// Handler (Current Trainer) Gender
-    ht_gender: u8,
-    /// Handler (Current Trainer) Friendship
+    ht_info: TrainerInfo,
     ht_friendship: u8,
 
     enjoyment: u8,
@@ -139,8 +135,6 @@ pub struct PokemonBase {
     relearn_move_3: u16,
     relearn_move_4: u16,
 
-    current_handler: u32,
-
     max_move_id: u16,
     max_species_id: u16,
     max_item_id: u16,
@@ -156,47 +150,13 @@ pub struct PokemonBase {
 /// ID Related implementations
 impl PokemonBase {
     pub fn is_shiny(&self) -> bool {
-        u32::from(self.trainer_secret_id) == self.personality_id
+        u32::from(self.ot_info.secret_id) == self.personality_id
     }
 
     pub fn shiny_xor(&self) -> u32 {
-        let upper_bits = (self.personality_id >> 16) ^ (self.trainer_secret_id as u32);
+        let upper_bits = (self.personality_id >> 16) ^ (self.ot_info.secret_id as u32);
 
-        (self.personality_id * 0xFFFF) ^ (self.trainer_public_id as u32) ^ upper_bits
-    }
-
-    /// Trainer public ID for Generation 7+
-    pub fn trainer_public_id_new(&self) -> u16 {
-        (((self.trainer_public_id as u32) | ((self.trainer_secret_id as u32) << 16)) % 1_000_000) as u16
-    }
-
-    /// Trainer secret ID for Generation 7+
-    pub fn trainer_secret_id_new(&self) -> u16 {
-        (((self.trainer_public_id as u32) | ((self.trainer_secret_id as u32) << 16)) / 1_000_000) as u16
-    }
-
-    fn set_id_new(&mut self, sid_new: u16, tid_new: u16) {
-        let new_id = (((sid_new as u32) * 1_000_000) + ((tid_new as u32) % 1_000_000)) as u32;
-        self.trainer_public_id = new_id as u16;
-        self.trainer_secret_id = (new_id >> 16) as u16;
-    }
-
-    /// Trainer public ID for Generation 7+
-    pub fn set_trainer_public_id_new(&mut self, tid: u16) {
-        self.set_id_new(tid, self.trainer_secret_id_new())
-    }
-
-    /// Trainer secret ID for Generation 7+
-    pub fn set_trainer_secret_id_new(&mut self, sid: u16) {
-        self.set_id_new(self.trainer_public_id_new(), sid)
-    }
-
-    pub fn trainer_public_id_to_display(&self) {
-        todo!()
-    }
-
-    pub fn trainer_secret_id_to_display() {
-        todo!()
+        (self.personality_id * 0xFFFF) ^ (self.ot_info.public_id as u32) ^ upper_bits
     }
 }
 
@@ -446,6 +406,8 @@ pub trait Pokemon {
     fn encrypt(&self) -> Vec<u8>;
     fn write(&self) -> Vec<u8>;
     fn read(data: Vec<u8>) -> Self;
+
+    fn get_species(&self) -> u16;
 
     fn is_nicknamed(&self) -> bool;
     fn is_egg(&self) -> bool;

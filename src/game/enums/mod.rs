@@ -5,3 +5,4 @@ pub mod language_id;
 pub mod species_id;
 pub mod gamecube_region;
 pub mod location;
+pub mod generation;

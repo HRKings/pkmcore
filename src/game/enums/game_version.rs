@@ -1,4 +1,4 @@
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd)]
 pub enum GameVersion {
     Invalid = -2,
     Any = -1,

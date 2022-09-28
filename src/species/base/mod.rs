@@ -34,7 +34,7 @@ pub struct SpeciesInfo {
 
     evolution_stage: u8,
 
-    gender_ratio: u8,
+    pub gender_ratio: u8,
 
     valid_random_held_items: Vec<u16>,
 
@@ -64,7 +64,7 @@ pub struct SpeciesInfo {
     special_type_tutors: Vec<bool>,
 }
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Eq)]
 pub enum SpeciesGenderCategory {
     Genderless = 2,
     FemaleOnly = 1,

@@ -5,3 +5,4 @@ pub mod game;
 pub mod save;
 pub mod mystery_gifts;
 pub mod trainer;
+pub mod legality;

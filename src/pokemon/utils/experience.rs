@@ -1,5 +1,7 @@
 // region: Experience table
+
     /// Experience required for next level [0,99]
+    #[allow(clippy::zero_prefixed_literal)]
     const EXPERIENCE_TABLE: [[u32; 6]; 100] =
     [
         [0000000, 0000000, 0000000, 0000000, 0000000, 0000000],
@@ -111,14 +113,14 @@ pub fn get_level(experience: u32, growth_rate: usize) -> u8 {
     return 100;
   }
 
-  let levelSearch = EXPERIENCE_TABLE.into_iter().position(|x| experience >= x[growth_rate]);
-  match levelSearch {
-    Some(level) => level as u8,
+  let level_search = EXPERIENCE_TABLE.into_iter().position(|x|  x[growth_rate] >= experience);
+  match level_search {
+    Some(level) => (level as u8) + 1,
     None => 1
   }
 }
 
-pub fn get_minimum_level_experience(level: u8, growth_rate: usize) -> u32 {
+pub fn get_minimum_level_experience(mut level: u8, growth_rate: usize) -> u32 {
   if level <= 1 {
     return 0;
   }
@@ -128,4 +130,30 @@ pub fn get_minimum_level_experience(level: u8, growth_rate: usize) -> u32 {
   }
 
   EXPERIENCE_TABLE[level as usize - 1][growth_rate]
+}
+
+#[cfg(test)]
+mod tests {
+  use crate::pokemon::utils::experience::{get_level, EXPERIENCE_TABLE, get_minimum_level_experience};
+  use rand::Rng;
+
+  #[test]
+  fn get_level_by_experience() {
+    let mut rng = rand::thread_rng();
+    let level = rng.gen_range(1..100);
+    let growth_rate = rng.gen_range(0..5);
+
+    let result = get_level(EXPERIENCE_TABLE[(level as usize) - 1][growth_rate], growth_rate);
+    assert_eq!(result, level);
+  }
+
+  #[test]
+  fn get_minimum_experience_by_level() {
+    let mut rng = rand::thread_rng();
+    let level = rng.gen_range(1..100);
+    let growth_rate = rng.gen_range(0..5);
+
+    let result = get_minimum_level_experience(level, growth_rate);
+    assert_eq!(result, EXPERIENCE_TABLE[(level as usize) - 1][growth_rate]);
+  }
 }

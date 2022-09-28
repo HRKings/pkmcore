@@ -1,14 +1,12 @@
-pub mod pkm_utils;
-
 use std::cmp::max;
 
-use crate::{species::base::{SpeciesInfo, SpeciesGenderCategory}, game::enums::{pokemon_gender::PokemonGender, game_version::GameVersion, pokemon_nature::PokemonNature, language_id::LanguageID, species_id::SpeciesID, location::Locations}};
+use crate::{species::base::{SpeciesInfo, SpeciesGenderCategory}, game::enums::{pokemon_gender::PokemonGender, game_version::GameVersion, pokemon_nature::PokemonNature, language_id::LanguageID, species_id::SpeciesID, location}};
 
 use super::utils::{experience::{get_level, get_minimum_level_experience}, gender::generate_from_pid_and_ratio};
 
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
-pub struct PKMBase {
+pub struct PokemonBase {
     // PKMCore/PKHex Specific
 	valid_extensions: Vec<String>,
 	current_extension: String,
@@ -156,7 +154,7 @@ pub struct PKMBase {
 }
 
 /// ID Related implementations
-impl PKMBase {
+impl PokemonBase {
     pub fn is_shiny(&self) -> bool {
         u32::from(self.trainer_secret_id) == self.personality_id
     }
@@ -194,16 +192,16 @@ impl PKMBase {
     }
 
     pub fn trainer_public_id_to_display(&self) {
-        // TODO
+        todo!()
     }
 
     pub fn trainer_secret_id_to_display() {
-        // TODO
+        todo!()
     }
 }
 
 /// Methods to check the game from where the Pokemon is from
-impl PKMBase {
+impl PokemonBase {
     pub fn is_from_emerald(&self) -> bool {
         self.version == GameVersion::Emerald
     }
@@ -275,15 +273,15 @@ impl PKMBase {
 }
 
 /// Methods to check for GO transfers, Let's Go games and Virtual Consoles
-impl PKMBase {
+impl PokemonBase {
     /// Pokemon was transferred from Let's Go Eevee/Let's Go Pikachu
     pub fn is_from_gotransfer_letsgopikachu_letsgoeeve(&self) -> bool {
-        self.is_from_go() && self.met_location == Locations::Transfer_Go_LetsGoEeveeLetsGoPikachu as u16
+        self.is_from_go() && self.met_location == location::TRANSFER_GO_LETS_GO_EEVEE_LETS_GO_PIKACHU as u16
     }
 
     /// Pokemon was transferred from Go to Home
     pub fn is_from_gotransfer_home(&self) -> bool {
-        self.is_from_go() && self.met_location == Locations::Transfer_Go_Home as u16
+        self.is_from_go() && self.met_location == location::TRANSFER_GO_HOME as u16
     }
 
     pub fn is_from_virtualconsole(&self) -> bool {
@@ -296,7 +294,7 @@ impl PKMBase {
 }
 
 /// Generation related methods
-impl PKMBase {
+impl PokemonBase {
     pub fn is_from_generation_1(&self) -> bool {
         self.version == GameVersion::GroupRedBlueYellow
     }
@@ -329,22 +327,22 @@ impl PKMBase {
         self.version >= GameVersion::Sword || self.version <= GameVersion::ShiningPearl || self.is_from_gotransfer_home()
     }
 
-    pub fn generation(&self) -> i8 {
-        if self.is_from_generation_1() || self.is_from_virtualconsole_generation1() { return 1; }
-        if self.is_from_generation_2() || self.is_from_virtualconsole_generation2() { return 2; }
-        if self.is_from_generation_3() { return 3; }
-        if self.is_from_generation_4() { return 4; }
-        if self.is_from_generation_5() { return 5; }
-        if self.is_from_generation_6() { return 6; }
-        if self.is_from_generation_7() { return 7; }
-        if self.is_from_generation_8() { return 8; }
+    pub fn generation(&self) -> Option<u8> {
+        if self.is_from_generation_1() || self.is_from_virtualconsole_generation1() { return Some(1); }
+        if self.is_from_generation_2() || self.is_from_virtualconsole_generation2() { return Some(2); }
+        if self.is_from_generation_3() { return Some(3); }
+        if self.is_from_generation_4() { return Some(4); }
+        if self.is_from_generation_5() { return Some(5); }
+        if self.is_from_generation_6() { return Some(6); }
+        if self.is_from_generation_7() { return Some(7); }
+        if self.is_from_generation_8() { return Some(8); }
 
-        return -1;
+        None
     }
 }
 
 /// Pokerus related methods
-impl PKMBase {
+impl PokemonBase {
     pub fn is_infected_pokerus(&self) -> bool {
         self.pokerus_strain != 0
     }
@@ -355,17 +353,17 @@ impl PKMBase {
 }
 
 /// Stat calculation methods
-impl PKMBase {
+impl PokemonBase {
     pub fn current_level(&self) -> u8 {
         get_level(self.experience, self.species_info.exp_growth.into())
     }
 
-    pub fn set_current_level(&mut self, level: u8) {
+    pub fn set_current_level(&mut self, mut level: u8) {
         if level >= 100 {
             level = 100;
         }
 
-        if level <= 0 {
+        if level == 0 {
             level = 1;
         }
 
@@ -392,7 +390,7 @@ impl PKMBase {
     }
 
     pub fn flawless_iv_count(&self) -> u8 {
-        let count = 0;
+        let mut count = 0;
 
         if self.iv_hitpoints == self.max_iv { count += 1; }
         if self.iv_attack == self.max_iv { count += 1; }
@@ -405,9 +403,9 @@ impl PKMBase {
     }
 }
 
-impl PKMBase {
+impl PokemonBase {
     pub fn pid_ability(&self) -> Option<u32> {
-        if self.generation() > 5 {
+        if self.generation() > Some(5) {
             return None;
         }
 
@@ -439,11 +437,12 @@ impl PKMBase {
             return self.gender as u8 == (self.gender as u8 & 1)
         }
 
-        return self.gender == generate_from_pid_and_ratio(self.personality_id, self.species_info.gender())
+        self.gender == generate_from_pid_and_ratio(self.personality_id, self.species_info.gender_ratio)
     }
 }
 
-pub trait PKMTrait {
+pub trait Pokemon {
+    fn decrypt(&self) -> Vec<u8>;
     fn encrypt(&self) -> Vec<u8>;
     fn write(&self) -> Vec<u8>;
     fn read(data: Vec<u8>) -> Self;

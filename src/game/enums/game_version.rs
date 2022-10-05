@@ -1,6 +1,9 @@
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd)]
+use std::fmt::Display;
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Default)]
 pub enum GameVersion {
     Invalid = -2,
+    #[default]
     Any = -1,
     Unknown = 0,
 
@@ -181,5 +184,11 @@ impl GameVersion {
             11 => GameVersion::ColosseumXD,
             _ => GameVersion::Unknown,
         }
+    }
+}
+
+impl Display for GameVersion {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        todo!()
     }
 }

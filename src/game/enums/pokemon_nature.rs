@@ -1,4 +1,4 @@
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub enum PokemonNature {
     Hardy = 0,
     Lonely = 1,
@@ -26,5 +26,6 @@ pub enum PokemonNature {
     Careful = 23,
     Quirky = 24,
 
+    #[default]
     Random = 25,
 }

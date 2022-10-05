@@ -4,147 +4,146 @@ use crate::{species::base::{SpeciesInfo, SpeciesGenderCategory}, game::enums::{p
 
 use super::utils::{experience::{get_level, get_minimum_level_experience}, gender::generate_from_pid_and_ratio};
 
-#[allow(dead_code)]
-
+#[derive(Debug, Default)]
 pub struct PokemonBase {
     // PKMCore/PKHex Specific
-	valid_extensions: Vec<String>,
-	current_extension: String,
+	pub valid_extensions: Vec<String>,
+	pub current_extension: String,
 
     // Data
-	data: Vec<u8>,
-	extra_bytes: Vec<u8>,
-	valid: bool,
+	pub data: Vec<u8>,
+	pub extra_bytes: Vec<u8>,
+	pub valid: bool,
 
     // Technical
-	nickname_bytes: Vec<u8>,
+	pub nickname_bytes: Vec<u8>,
 	/// Original Trainer
-    ot_bytes: Vec<u8>,
+    pub ot_bytes: Vec<u8>,
 	/// Handler (Current Trainer)
-    ht_bytes: Vec<u8>,
+    pub ht_bytes: Vec<u8>,
 
-	size_on_party: u16,
-	size_when_stored: u16,
+	pub size_on_party: u16,
+	pub size_when_stored: u16,
 
     // Personal
-	species_info: SpeciesInfo,
+	pub species_info: SpeciesInfo,
 
-    species: SpeciesID,
-    gender: PokemonGender,
-    nature: PokemonNature,
-    stats_nature: PokemonNature,
-    ability: u8,
+    pub species: SpeciesID,
+    pub gender: PokemonGender,
+    pub nature: PokemonNature,
+    pub stats_nature: PokemonNature,
+    pub ability: u8,
 
-    nickname: String,
-    experience: u32,
-    level: u8,
-    form: u8,
+    pub nickname: String,
+    pub experience: u32,
+    pub level: u8,
+    pub form: u8,
 
-    current_friendship: u8,
+    pub current_friendship: u8,
 
     /// Original Trainer
-    ot_info: TrainerInfo,
-    ot_friendship: u8,
+    pub ot_info: TrainerInfo,
+    pub ot_friendship: u8,
 
-    ball_type: u8,
-    met_level: u8,
+    pub ball_type: u8,
+    pub met_level: u8,
 
     // Battle
-    move_1: u16,
-    move_1_pp: u8,
-    move_1_pp_ups: u8,
+    pub move_1: u16,
+    pub move_1_pp: u8,
+    pub move_1_pp_ups: u8,
 
-    move_2: u16,
-    move_2_pp: u8,
-    move_2_pp_ups: u8,
+    pub move_2: u16,
+    pub move_2_pp: u8,
+    pub move_2_pp_ups: u8,
 
-    move_3: u16,
-    move_3_pp: u8,
-    move_3_pp_ups: u8,
+    pub move_3: u16,
+    pub move_3_pp: u8,
+    pub move_3_pp_ups: u8,
 
-    move_4: u16,
-    move_4_pp: u8,
-    move_4_pp_ups: u8,
+    pub move_4: u16,
+    pub move_4_pp: u8,
+    pub move_4_pp_ups: u8,
 
-    ev_hitpoints: u16,
-    ev_attack: u16,
-    ev_defense: u16,
-    ev_speed: u16,
-    ev_special_attack: u16,
-    ev_special_defense: u16,
+    pub ev_hitpoints: u16,
+    pub ev_attack: u16,
+    pub ev_defense: u16,
+    pub ev_speed: u16,
+    pub ev_special_attack: u16,
+    pub ev_special_defense: u16,
 
-    iv_hitpoints: u16,
-    iv_attack: u16,
-    iv_defense: u16,
-    iv_speed: u16,
-    iv_special_attack: u16,
-    iv_special_defense: u16,
+    pub iv_hitpoints: u16,
+    pub iv_attack: u16,
+    pub iv_defense: u16,
+    pub iv_speed: u16,
+    pub iv_special_attack: u16,
+    pub iv_special_defense: u16,
 
-    hitpoints: u16,
-    attack: u16,
-    defense: u16,
-    speed: u16,
-    special_attack: u16,
-    special_defense: u16,
+    pub hitpoints: u16,
+    pub attack: u16,
+    pub defense: u16,
+    pub speed: u16,
+    pub special_attack: u16,
+    pub special_defense: u16,
 
-    status_condition: u8,
+    pub status_condition: u8,
 
     // Hidden
-    version: GameVersion,
+    pub version: GameVersion,
 
-    pokerus_strain: u16,
-    pokerus_days: u16,
+    pub pokerus_strain: u16,
+    pub pokerus_days: u16,
 
-    encryption_constant: u32,
-    personality_id: u32,
+    pub encryption_constant: u32,
+    pub personality_id: u32,
 
     // Misc
-    language: LanguageID,
-    fateful_encounter: bool,
+    pub language: LanguageID,
+    pub fateful_encounter: bool,
 
     /// Trainer ID derived attribute
-    tsv: u8,
+    pub tsv: u8,
     /// Personality ID (PID) derived attribute
-    psv: u8,
+    pub psv: u8,
     /// Complex generated attribute
-    characteristic: u32,
+    pub characteristic: u32,
 
-    mark_value: u16,
-    met_location: u16,
-    egg_location: u16,
+    pub mark_value: u16,
+    pub met_location: u16,
+    pub egg_location: u16,
 
-    met_year: u8,
-    met_month: u8,
-    met_day: u8,
+    pub met_year: u8,
+    pub met_month: u8,
+    pub met_day: u8,
 
     /// Handler (Current Trainer) Name
-    ht_info: TrainerInfo,
-    ht_friendship: u8,
+    pub ht_info: TrainerInfo,
+    pub ht_friendship: u8,
 
-    enjoyment: u8,
-    fullness: u8,
+    pub enjoyment: u8,
+    pub fullness: u8,
 
-    ability_number: u16,
+    pub ability_number: u16,
 
-    egg_year: u8,
-    egg_month: u8,
-    egg_day: u8,
+    pub egg_year: u8,
+    pub egg_month: u8,
+    pub egg_day: u8,
 
-    relearn_move_1: u16,
-    relearn_move_2: u16,
-    relearn_move_3: u16,
-    relearn_move_4: u16,
+    pub relearn_move_1: u16,
+    pub relearn_move_2: u16,
+    pub relearn_move_3: u16,
+    pub relearn_move_4: u16,
 
-    max_move_id: u16,
-    max_species_id: u16,
-    max_item_id: u16,
-    max_ball_id: u8,
-    max_game_id: GameVersion,
-    min_game_id: GameVersion,
-    max_iv: u16,
-    max_ev: u16,
-    ot_name_length: u8,
-    nickname_length: u8,
+    pub max_move_id: u16,
+    pub max_species_id: u16,
+    pub max_item_id: u16,
+    pub max_ball_id: u8,
+    pub max_game_id: GameVersion,
+    pub min_game_id: GameVersion,
+    pub max_iv: u16,
+    pub max_ev: u16,
+    pub ot_name_length: u8,
+    pub nickname_length: u8,
 }
 
 /// ID Related implementations
@@ -401,11 +400,13 @@ impl PokemonBase {
     }
 }
 
-pub trait Pokemon {
+pub trait PokemonTrait {
+    fn get_base(&self) -> &PokemonBase;
+
     fn decrypt(&self) -> Vec<u8>;
     fn encrypt(&self) -> Vec<u8>;
     fn write(&self) -> Vec<u8>;
-    fn read(data: Vec<u8>) -> Self;
+    fn read(data: &[u8]) -> Self;
 
     fn get_species(&self) -> u16;
 

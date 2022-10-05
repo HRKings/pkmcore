@@ -1,4 +1,4 @@
-use crate::game::enums::{game_version::GameVersion, generation::Generation};
+use crate::game::enums::generation::Generation;
 
 #[derive(Debug, Clone)]
 pub struct TrainerInfo {
@@ -16,17 +16,29 @@ pub struct TrainerInfo {
     pub new_sid: u32,
 }
 
+impl Default for TrainerInfo {
+    fn default() -> Self {
+        Self {
+            generation: Generation::None,
+            gender: 0,
+            public_id: 0,
+            secret_id: 0,
+            name: Default::default(),
+            new_id: 0,
+            new_sid: 0,
+        }
+    }
+}
+
 impl TrainerInfo {
     /// Trainer public ID for Generation 7+
     pub fn trainer_public_id_new(&self) -> u16 {
-        (((self.public_id as u32) | ((self.secret_id as u32) << 16)) % 1_000_000)
-            as u16
+        (((self.public_id as u32) | ((self.secret_id as u32) << 16)) % 1_000_000) as u16
     }
 
     /// Trainer secret ID for Generation 7+
     pub fn trainer_secret_id_new(&self) -> u16 {
-        (((self.public_id as u32) | ((self.secret_id as u32) << 16)) / 1_000_000)
-            as u16
+        (((self.public_id as u32) | ((self.secret_id as u32) << 16)) / 1_000_000) as u16
     }
 
     fn set_id_new(&mut self, sid_new: u16, tid_new: u16) {
@@ -46,18 +58,18 @@ impl TrainerInfo {
     }
 
     pub fn trainer_public_id_to_display(&self) -> u32 {
-      if self.generation >= Generation::Generation7 {
-        self.new_id
-      } else {
-        self.public_id.into()
-      }
+        if self.generation >= Generation::G7 {
+            self.new_id
+        } else {
+            self.public_id.into()
+        }
     }
 
     pub fn trainer_secret_id_to_display(&self) -> u32 {
-      if self.generation >= Generation::Generation7 {
-        self.new_sid
-      } else {
-        self.secret_id.into()
-      }
+        if self.generation >= Generation::G7 {
+            self.new_sid
+        } else {
+            self.secret_id.into()
+        }
     }
 }

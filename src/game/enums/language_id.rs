@@ -1,7 +1,8 @@
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub enum LanguageID {
     /// Undefined Language ID, usually indicative of a value not being set.
     /// Obs.: Generation 5 Japanese In-game Trades happen to not have their Language value set, and express Language=0
+    #[default]
     Hacked = 0,
 
     /// Japanese (日本語)

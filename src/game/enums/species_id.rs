@@ -1,6 +1,7 @@
 #[allow(non_camel_case_types)]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub enum SpeciesID {
+    #[default]
     None,
     Bulbasaur,
     Ivysaur,

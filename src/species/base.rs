@@ -6,7 +6,7 @@ use crate::{
 };
 
 #[allow(dead_code)]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct SpeciesInfo {
     data: Vec<u8>,
 
